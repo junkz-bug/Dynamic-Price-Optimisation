@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Price Optimization</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Retail Price Prediction</h1>
+        <form action="/predict" method="POST" class="form">
+            <label for="product_name">Product Name:</label>
+            <select id="product_name" name="product_name">
+                {% for product_name in product_names %}
+                <option value="{{ product_name }}">{{ product_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="qty">Product Quantity</label>
+            <input type="number" id="qty" name="qty" step="1" required placeholder="e.g., 2">
+
+
+            <label for="freight_price">Freight Price:</label>
+            <input type="number" id="freight_price" name="freight_price" step="0.01" required placeholder="e.g., 5.00">
+
+            <label for="product_score">Product Score:</label>
+            <input type="number" id="product_score" name="product_score" step="0.01" required placeholder="e.g., 4.5">
+
+            <label for="comp_1">Competitor 1 Price:</label>
+            <input type="number" id="comp_1" name="comp_1" step="0.01" required placeholder="e.g., 22.00">
+
+            <label for="comp_2">Competitor 2 Price:</label>
+            <input type="number" id="comp_2" name="comp_2" step="0.01" required placeholder="e.g., 24.00">
+
+            <label for="comp_3">Competitor 3 Price:</label>
+            <input type="number" id="comp_3" name="comp_3" step="0.01" required placeholder="e.g., 23.50">
+
+            <label for="ps1">Competitor 1 Product Score:</label>
+            <input type="number" id="ps1" name="ps1" step="0.01" required placeholder="e.g., 4.0">
+
+            <label for="ps2">Competitor 2 Product Score:</label>
+            <input type="number" id="ps2" name="ps2" step="0.01" required placeholder="e.g., 4.3">
+
+            <label for="ps3">Competitor 3 Product Score:</label>
+            <input type="number" id="ps3" name="ps3" step="0.01" required placeholder="e.g., 4.1">
+
+            <label for="fp1">Competitor 1 Freight Price:</label>
+            <input type="number" id="fp1" name="fp1" step="0.01" required placeholder="e.g., 3.50">
+
+            <label for="fp2">Competitor 2 Freight Price:</label>
+            <input type="number" id="fp2" name="fp2" step="0.01" required placeholder="e.g., 4.00">
+
+            <label for="fp3">Competitor 3 Freight Price:</label>
+            <input type="number" id="fp3" name="fp3" step="0.01" required placeholder="e.g., 3.75">
+
+            <label for="lag_price">Lag Price:</label>
+            <input type="number" id="lag_price" name="lag_price" step="0.01" required placeholder="e.g., 24.75">
+
+            <button type="submit" onclick="send_Data()">Predict Price</button>
+        </form>
+
+        <div class="row">
+              <div class="col-12" style="text-align : center">
+                <h1><span id="prediction"></span> </h1>
+              </div>
+        </div>
+    <script>
+      function form_handler(event)
+      {
+        event.preventDefault();
+      }
+
+      function send_Data(){
+        document.querySelector('form').addEventListener('submit',form_handler);
+        var fd = new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/predict',true);
+        document.getElementById("prediction").innerHTML = "Wait ! Predicting Price";
+        xhr.onreadystatechange = function()
+        {
+          if(xhr.readyState == XMLHttpRequest.DONE)
+          {
+            document.getElementById("prediction").innerHTML="Prediction: "+ xhr.responseText;
+          }
+        }
+        xhr.send(fd);
+      }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>
